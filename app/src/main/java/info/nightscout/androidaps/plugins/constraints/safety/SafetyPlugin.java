@@ -152,7 +152,9 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     public Constraint<Boolean> isAdvancedFilteringEnabled(@NonNull Constraint<Boolean> value) {
         BgSourceInterface bgSource = activePlugin.getActiveBgSource();
 
-        if (!bgSource.advancedFilteringSupported())
+        boolean ignore = sp.getBoolean(R.string.key_enableSMB_ignore, false);
+
+        if (!ignore && !bgSource.advancedFilteringSupported())
             value.set(getAapsLogger(), false, getResourceHelper().gs(R.string.smbalwaysdisabled), this);
         return value;
     }
