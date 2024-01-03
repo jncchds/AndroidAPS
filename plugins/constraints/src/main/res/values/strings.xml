@@ -55,6 +55,9 @@
     <string name="maxvalueinpreferences">max value in preferences</string>
     <string name="hardlimit">hard limit</string>
     <string name="treatmentssafety_title">Treatments safety</string>
+    <string name="key_enableSMB_ignore" translatable="false">enableSMB_ignore</string>
+    <string name="enablesmbignore">Enable SMB disregarding BG source (UNSAFE)</string>
+    <string name="enablesmbaftercarbs_ignore">Enable SMB not caring about noisy BG source (UNSAFE)</string>
 
     <!-- Objectives -->
     <string name="completed_well_done">Completed, well done!</string>
