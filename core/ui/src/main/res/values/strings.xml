@@ -657,4 +657,8 @@
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>
 
+    <string name="key_engineering_mode" translatable="false">engineering_mode</string>
+    <string name="engineering_mode">Engineering mode</string>
+    <string name="engineering_mode_summary">Flag to enable engineering mode (UNSAFE)</string>
+
 </resources>

@@ -114,6 +114,11 @@
             android:summary="@string/theme_switcher_summary"
             android:title="@string/app_color_scheme" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_engineering_mode"
+            android:title="@string/engineering_mode_summary" />
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
