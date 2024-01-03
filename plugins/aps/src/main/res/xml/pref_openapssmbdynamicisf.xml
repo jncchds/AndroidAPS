@@ -144,7 +144,7 @@
             android:inputType="number"
             android:key="@string/key_smb_max_minutes"
             android:title="@string/smb_max_minutes_summary"
-            validate:maxNumber="120"
+            validate:maxNumber="420"
             validate:minNumber="15"
             validate:testType="numericRange" />
 
@@ -158,7 +158,7 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/uam_smb_max_minutes_summary"
-            validate:maxNumber="120"
+            validate:maxNumber="420"
             validate:minNumber="15"
             validate:testType="numericRange" />
 
