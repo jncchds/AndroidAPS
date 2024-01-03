@@ -61,6 +61,9 @@ class VersionCheckerPlugin @Inject constructor(
     }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
+        val byPass = sp.getBoolean(R.string.key_bypass_old_version_check, false)
+        if (byPass)
+            return value
         checkWarning()
         versionCheckerUtils.triggerCheckVersion()
         if (lastCheckOlderThan(gracePeriod.veryOld.daysToMillis()))
@@ -112,8 +115,12 @@ class VersionCheckerPlugin @Inject constructor(
     private fun shouldWarnAgain() =
         dateUtil.now() > sp.getLong(R.string.key_last_versionchecker_plugin_warning_timestamp, 0) + WARN_EVERY
 
-    private fun lastCheckOlderThan(gracePeriod: Long): Boolean =
-        dateUtil.now() > sp.getLong(R.string.key_last_successful_version_check_timestamp, 0) + gracePeriod
+    private fun lastCheckOlderThan(gracePeriod: Long): Boolean {
+        val byPass = sp.getBoolean(R.string.key_bypass_old_version_check, false)
+        if (byPass)
+            return false
+        return dateUtil.now() > sp.getLong(R.string.key_last_successful_version_check_timestamp, 0) + gracePeriod
+    }
 
     private fun Long.daysToMillis() = TimeUnit.DAYS.toMillis(this)
 }
