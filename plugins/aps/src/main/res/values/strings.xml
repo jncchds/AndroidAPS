@@ -68,6 +68,8 @@
     <string name="enable_smb">Enable SMB</string>
     <string name="a52_risk_enable">A52 risk enable</string>
     <string name="a52_risk_enable_summary">Flag to disable Medtronic A52 error safety (should lead to more aggressive bolusing)</string>
+    <string name="enablesmbignore">Enable SMB disregarding BG source (UNSAFE)</string>Add commentMore actions
+    <string name="enablesmbaftercarbs_ignore">Enable SMB not caring about noisy BG source (UNSAFE)</string>
     <string name="enable_smb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
     <string name="enable_uam_summary">Detection of Unannounced meals</string>
     <string name="enable_smb_always">Enable SMB always</string>

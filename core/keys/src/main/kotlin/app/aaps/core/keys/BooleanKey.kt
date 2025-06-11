@@ -54,6 +54,7 @@ enum class BooleanKey(
     ApsUseSmbWithLowTt("enableSMB_with_temptarget", true, defaultedBySM = true, dependency = ApsUseSmb), // change from default false
     ApsUseSmbAfterCarbs("enableSMB_after_carbs", true, defaultedBySM = true, dependency = ApsUseSmb), // change from default false
     ApsUseUam("use_uam", true, defaultedBySM = true), // change from default false
+    ApsIgnoreBgSource("enableSMB_ignore", false, defaultedBySM = false),
     ApsSensitivityRaisesTarget("sensitivity_raises_target", true, defaultedBySM = true),
     ApsResistanceLowersTarget("resistance_lowers_target", true, defaultedBySM = true), // change from default false
     ApsAlwaysUseShortDeltas("always_use_shortavg", false, defaultedBySM = true, hideParentScreenIfHidden = true),
