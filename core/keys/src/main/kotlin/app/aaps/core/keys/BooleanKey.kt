@@ -46,6 +46,7 @@ enum class BooleanKey(
 
     ApsUseDynamicSensitivity("use_dynamic_sensitivity", false),
     ApsUseAutosens("openapsama_useautosens", true, defaultedBySM = true, negativeDependency = ApsUseDynamicSensitivity), // change from default false
+    ApsA52RiskEnable("A52_risk_enable", false, defaultedBySM = false),
     ApsUseSmb("use_smb", true, defaultedBySM = true), // change from default false
     ApsUseSmbWithHighTt("enableSMB_with_high_temptarget", false, defaultedBySM = true, dependency = ApsUseSmb),
     ApsUseSmbAlways("enableSMB_always", true, defaultedBySM = true, dependency = ApsUseSmb), // change from default false

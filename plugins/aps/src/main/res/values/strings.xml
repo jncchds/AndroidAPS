@@ -66,6 +66,8 @@
     <string name="openapssmb_max_iob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
     <string name="enable_uam">Enable UAM</string>
     <string name="enable_smb">Enable SMB</string>
+    <string name="a52_risk_enable">A52 risk enable</string>
+    <string name="a52_risk_enable_summary">Flag to disable Medtronic A52 error safety (should lead to more aggressive bolusing)</string>
     <string name="enable_smb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
     <string name="enable_uam_summary">Detection of Unannounced meals</string>
     <string name="enable_smb_always">Enable SMB always</string>

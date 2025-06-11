@@ -237,7 +237,7 @@ class DetermineBasalAdapterAutoISFJS(private val scriptReader: ScriptReader, pri
         //}
         this.profile.put("remainingCarbsCap", SMBDefaults.remainingCarbsCap)
         this.profile.put("enableUAM", uamAllowed)
-        this.profile.put("A52_risk_enable", SMBDefaults.A52_risk_enable)
+        this.profile.put("A52_risk_enable", preferences.get(BooleanKey.ApsA52RiskEnable))
         val smbEnabled = preferences.get(BooleanKey.ApsUseSmb)
         this.profile.put("SMBInterval", preferences.get(IntKey.ApsMaxSmbFrequency))
         this.profile.put("enableSMB_with_COB", smbEnabled && preferences.get(BooleanKey.ApsUseSmbWithCob))

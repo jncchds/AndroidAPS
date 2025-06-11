@@ -446,7 +446,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             skip_neutral_temps = pump.setNeutralTempAtFullHour(),
             remainingCarbsCap = SMBDefaults.remainingCarbsCap,
             enableUAM = constraintsChecker.isUAMEnabled().also { inputConstraints.copyReasons(it) }.value(),
-            A52_risk_enable = SMBDefaults.A52_risk_enable,
+            A52_risk_enable = preferences.get(BooleanKey.ApsA52RiskEnable),
             SMBInterval = preferences.get(IntKey.ApsMaxSmbFrequency),
             enableSMB_with_COB = smbEnabled && preferences.get(BooleanKey.ApsUseSmbWithCob),
             enableSMB_with_temptarget = smbEnabled && preferences.get(BooleanKey.ApsUseSmbWithLowTt),
@@ -602,6 +602,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsDynIsfAdjustSensitivity, summary = R.string.dynisf_adjust_sensitivity_summary, title = R.string.dynisf_adjust_sensitivity))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsSensitivityRaisesTarget, summary = R.string.sensitivity_raises_target_summary, title = R.string.sensitivity_raises_target_title))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsResistanceLowersTarget, summary = R.string.resistance_lowers_target_summary, title = R.string.resistance_lowers_target_title))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsA52RiskEnable, summary = R.string.a52_risk_enable_summary, title = R.string.a52_risk_enable))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsUseSmb, summary = R.string.enable_smb_summary, title = R.string.enable_smb))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsUseSmbWithHighTt, summary = R.string.enable_smb_with_high_temp_target_summary, title = R.string.enable_smb_with_high_temp_target))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.ApsUseSmbAlways, summary = R.string.enable_smb_always_summary, title = R.string.enable_smb_always))
