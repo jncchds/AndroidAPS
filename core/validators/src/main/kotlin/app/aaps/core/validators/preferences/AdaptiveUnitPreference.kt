@@ -1,7 +1,6 @@
 package app.aaps.core.validators.preferences
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.text.InputType
 import android.util.AttributeSet
 import androidx.annotation.StringRes
@@ -10,8 +9,8 @@ import androidx.preference.PreferenceViewHolder
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.UnitDoublePreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
+import app.aaps.core.keys.interfaces.UnitDoublePreferenceKey
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
 import app.aaps.core.validators.R
@@ -34,7 +33,6 @@ class AdaptiveUnitPreference(
 
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var preferences: Preferences
-    @Inject lateinit var sharedPrefs: SharedPreferences
 
     // Inflater constructor
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, unitKey = null, title = null)
@@ -68,17 +66,18 @@ class AdaptiveUnitPreference(
             isVisible = false; isEnabled = false
         }
         preferenceKey.dependency?.let {
-            if (!sharedPrefs.getBoolean(it.key, false))
+            if (!preferences.get(it))
                 isVisible = false
         }
         preferenceKey.negativeDependency?.let {
-            if (sharedPrefs.getBoolean(it.key, false))
+            if (preferences.get(it))
                 isVisible = false
         }
         validatorParameters = obtainValidatorParameters(attrs)
         setOnBindEditTextListener { editText ->
             validator = DefaultEditTextValidator(editText, validatorParameters, context)
             editText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+            editText.setSelection(editText.length())
         }
         setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) != false }
         setDefaultValue(preferenceKey.defaultValue)
@@ -119,13 +118,14 @@ class AdaptiveUnitPreference(
         text = converted.toPlainString()
     }
 
-    override fun persistString(value: String?): Boolean =
-        try {
-            val numericValue = SafeParse.stringToDouble(value, preferenceKey.defaultValue)
-            summary = numericValue.toString()
-            val store = profileUtil.convertToMgdl(numericValue, profileUtil.units)
-            super.persistString(store.toString())
+    override fun persistString(value: String?): Boolean {
+        val numericValue = SafeParse.stringToDouble(value, preferenceKey.defaultValue)
+        summary = numericValue.toString()
+        val store = profileUtil.convertToMgdl(numericValue, profileUtil.units)
+        return try {
+            super.persistFloat(store.toFloat())
         } catch (_: Exception) {
-            false
+            super.persistString(store.toString())
         }
+    }
 }

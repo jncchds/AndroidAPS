@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +39,7 @@ class PreparePredictionsWorker(
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var dateUtil: DateUtil
 
     class PreparePredictionsData(
         val overviewData: OverviewData
@@ -48,7 +50,7 @@ class PreparePredictionsWorker(
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
         val apsResult = if (config.APS) loop.lastRun?.constraintsProcessed else processedDeviceStatusData.getAPSResult()
-        val predictionsAvailable = if (config.APS) loop.lastRun?.request?.hasPredictions == true else config.NSCLIENT
+        val predictionsAvailable = if (config.APS) loop.lastRun?.request?.hasPredictions == true else config.AAPSCLIENT
         val menuChartSettings = overviewMenus.setting
         // align to hours
         val calendar = Calendar.getInstance().also {
@@ -74,7 +76,7 @@ class PreparePredictionsWorker(
 
         val bgListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
         val predictions: MutableList<GlucoseValueDataPoint>? = apsResult?.predictionsAsGv
-            ?.map { bg -> GlucoseValueDataPoint(bg, profileUtil, rh) }
+            ?.map { bg -> GlucoseValueDataPoint(bg, profileUtil, rh, dateUtil) }
             ?.toMutableList()
         if (predictions != null) {
             predictions.sortWith { o1: GlucoseValueDataPoint, o2: GlucoseValueDataPoint -> o1.x.compareTo(o2.x) }

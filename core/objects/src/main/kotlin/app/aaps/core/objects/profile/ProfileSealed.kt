@@ -276,7 +276,7 @@ sealed class ProfileSealed(
         else getProfileIsfMgdl()
 
     override fun getIsfMgdlForCarbs(timestamp: Long, caller: String, config: Config, processedDeviceStatusData: ProcessedDeviceStatusData): Double =
-        if (config.NSCLIENT) {
+        if (config.AAPSCLIENT) {
             processedDeviceStatusData.getAPSResult()?.isfMgdlForCarbs ?: toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
         } else {
             if (aps?.supportsDynamicIsf() ?: error("APS not defined"))
@@ -330,7 +330,7 @@ sealed class ProfileSealed(
         val o = JSONObject()
         o.put("units", units.asText)
         o.put("dia", dia)
-        o.put("timezone", dateUtil.timeZoneByOffset(utcOffset).id ?: "UTC")
+        o.put("timezone", dateUtil.timeZoneByOffset(utcOffset))
         // SENS
         val sens = JSONArray()
         var elapsedHours = 0L

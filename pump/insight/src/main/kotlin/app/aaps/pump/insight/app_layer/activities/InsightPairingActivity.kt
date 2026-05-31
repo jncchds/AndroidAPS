@@ -41,6 +41,7 @@ class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionServi
     private lateinit var binding: ActivityInsightPairingBinding
     private var scanning = false
     private val deviceAdapter = DeviceAdapter()
+    private var isBound = false
 
     private var service: InsightConnectionService? = null
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
@@ -54,10 +55,13 @@ class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionServi
                     onStateChanged(it.state)
                     pumpSync.connectNewPump()
                 }
+                isBound = true
             }
         }
 
-        override fun onServiceDisconnected(name: ComponentName) {}
+        override fun onServiceDisconnected(name: ComponentName) {
+            isBound =false
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,12 +82,17 @@ class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionServi
     }
 
     override fun onDestroy() {
+        binding.yes.setOnClickListener(null)
+        binding.no.setOnClickListener(null)
+        binding.exit.setOnClickListener(null)
+        binding.deviceList.adapter = null
         service?.run {
             withdrawConnectionRequest(this@InsightPairingActivity)
             unregisterStateCallback(this@InsightPairingActivity)
             unregisterExceptionCallback(this@InsightPairingActivity)
         }
-        unbindService(serviceConnection)
+        if (isBound)
+            unbindService(serviceConnection)
         super.onDestroy()
     }
 

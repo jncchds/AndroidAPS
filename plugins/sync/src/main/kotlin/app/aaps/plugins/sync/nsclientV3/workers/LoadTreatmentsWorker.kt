@@ -59,7 +59,7 @@ class LoadTreatmentsWorker(
                         rxBus.send(EventNSClientNewLog("◄ $action", "${treatments.size} TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                         // Schedule processing of fetched data and continue of loading
                         continueLoading =
-                            response.code != 304 && nsIncomingDataProcessor.processTreatments(response.values)
+                            response.code != 304 && nsIncomingDataProcessor.processTreatments(response.values, nsClientV3Plugin.doingFullSync)
                     } else {
                         // End first load
                         if (isFirstLoad) {
@@ -86,7 +86,7 @@ class LoadTreatmentsWorker(
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }
 
-        storeDataForDb.storeTreatmentsToDb()
+        storeDataForDb.storeTreatmentsToDb(fullSync = nsClientV3Plugin.doingFullSync)
         nsClientV3Plugin.lastOperationError = null
         return Result.success()
     }

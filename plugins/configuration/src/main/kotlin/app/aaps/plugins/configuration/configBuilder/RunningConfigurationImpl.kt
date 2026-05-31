@@ -19,8 +19,8 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.plugins.configuration.R
@@ -80,7 +80,7 @@ class RunningConfigurationImpl @Inject constructor(
 
     // called in NSClient mode only
     override fun apply(configuration: NSDeviceStatus.Configuration) {
-        assert(config.NSCLIENT)
+        assert(config.AAPSCLIENT)
 
         configuration.version?.let {
             rxBus.send(EventNSClientNewLog("◄ VERSION", "Received AAPS version  $it"))

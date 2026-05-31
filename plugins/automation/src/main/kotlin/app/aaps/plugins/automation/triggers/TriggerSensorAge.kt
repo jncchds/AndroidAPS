@@ -18,7 +18,7 @@ import java.util.Optional
 
 class TriggerSensorAge(injector: HasAndroidInjector) : Trigger(injector) {
 
-    var sensorAgeHours: InputDouble = InputDouble(0.0, 0.0, 336.0, 0.1, DecimalFormat("0.1"))
+    var sensorAgeHours: InputDouble = InputDouble(0.0, 0.0, 720.0, 0.1, DecimalFormat("0.1"))
     var comparator: Comparator = Comparator(rh)
 
     private constructor(injector: HasAndroidInjector, triggerSensorAge: TriggerSensorAge) : this(injector) {
@@ -40,7 +40,7 @@ class TriggerSensorAge(injector: HasAndroidInjector) : Trigger(injector) {
         val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.SENSOR_CHANGE)
         val currentAgeHours = therapyEvent?.timestamp?.let { timestamp ->
             (dateUtil.now() - timestamp) / (60 * 60 * 1000.0)
-        }?.toDouble() ?: 0.0
+        } ?: 0.0
         if (therapyEvent == null && comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true

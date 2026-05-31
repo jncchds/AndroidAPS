@@ -22,8 +22,8 @@ import app.aaps.core.interfaces.rx.events.EventEffectiveProfileSwitchChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.profile.ProfileSealed
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -114,7 +114,7 @@ class ProfileFunctionImpl @Inject constructor(
         // Try to get it from device status
         // Remove this code after switch to api v3
         // ps == null
-        if (config.NSCLIENT) {
+        if (config.AAPSCLIENT) {
             processedDeviceStatusData.pumpData?.activeProfileName?.let { activeProfile ->
                 activePlugin.activeProfileSource.profile?.getSpecificProfile(activeProfile)?.let { ap ->
                     val sealed = ProfileSealed.Pure(ap, activePlugin)

@@ -62,7 +62,12 @@ interface UiInteraction {
     fun runTempTargetDialog(fragmentManager: FragmentManager)
     fun runExtendedBolusDialog(fragmentManager: FragmentManager)
     fun runFillDialog(fragmentManager: FragmentManager)
-    fun runBolusProgressDialog(fragmentManager: FragmentManager, insulin: Double, id: Long)
+    enum class SiteMode(val i: Int) {
+        VIEW(1),
+        EDIT(2)
+    }
+    fun runSiteRotationDialog(fragmentManager: FragmentManager)
+    fun runBolusProgressDialog(fragmentManager: FragmentManager)
     enum class Mode(val i: Int) {
         RUNNING_PROFILE(1),
         CUSTOM_PROFILE(2),
@@ -93,7 +98,7 @@ interface UiInteraction {
     fun addNotificationWithSound(id: Int, text: String, level: Int, @RawRes soundId: Int?)
     fun addNotificationValidTo(id: Int, date: Long, text: String, level: Int, validTo: Long)
     fun addNotificationWithAction(nsAlarm: NSAlarm)
-    fun addNotificationWithAction(id: Int, text: String, level: Int, @StringRes buttonText: Int, action: Runnable, validityCheck: (() -> Boolean)?, @RawRes soundId: Int? = null, date: Long = System.currentTimeMillis())
+    fun addNotificationWithAction(id: Int, text: String, level: Int, @StringRes buttonText: Int, action: Runnable, validityCheck: (() -> Boolean)?, @RawRes soundId: Int? = null, date: Long = System.currentTimeMillis(), validTo: Long = 0)
 
     /**
      * Add notification that shows dialog after clicking button
@@ -116,7 +121,7 @@ interface UiInteraction {
      */
     fun addNotification(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, action: Runnable, validityCheck: (() -> Boolean)?)
 
-    fun showToastAndNotification(ctx: Context?, string: String, @RawRes soundID: Int)
+    fun showToastAndNotification(ctx: Context, string: String, @RawRes soundID: Int)
 
     fun startAlarm(@RawRes sound: Int, reason: String)
     fun stopAlarm(reason: String)

@@ -16,7 +16,6 @@ import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
@@ -41,8 +40,8 @@ import app.aaps.pump.equil.manager.command.BaseCmd
 import app.aaps.pump.equil.manager.command.CmdDevicesOldGet
 import app.aaps.pump.equil.manager.command.CmdHistoryGet
 import app.aaps.pump.equil.manager.command.CmdInsulinGet
-import app.aaps.pump.equil.manager.command.CmdModelGet
 import app.aaps.pump.equil.manager.command.CmdPair
+import app.aaps.pump.equil.manager.command.CmdRunningModeGet
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -92,7 +91,7 @@ class EquilBLE @Inject constructor(
     private fun bleConnectErrorForResult() {
         baseCmd?.let { baseCmd ->
             synchronized(baseCmd) {
-                baseCmd.cmdStatus = false
+                baseCmd.cmdSuccess = false
                 baseCmd.notifyAll()
             }
         }
@@ -167,7 +166,12 @@ class EquilBLE @Inject constructor(
                 decode(characteristic.value)
             }
 
-            @Synchronized override fun onDescriptorWrite(gatt: BluetoothGatt, descriptor: BluetoothGattDescriptor, status: Int) {
+            @Synchronized
+            override fun onDescriptorWrite(
+                gatt: BluetoothGatt,
+                descriptor: BluetoothGattDescriptor,
+                status: Int
+            ) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "onDescriptorWrite received: $status")
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     aapsLogger.debug(LTag.PUMPBTCOMM, "onDescriptorWrite: Wrote GATT Descriptor successfully.")
@@ -177,7 +181,8 @@ class EquilBLE @Inject constructor(
         }
     }
 
-    @Suppress("deprecation") fun openNotification() {
+    @Suppress("deprecation")
+    fun openNotification() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "openNotification: $isConnected")
         val r0 = bluetoothGatt?.setCharacteristicNotification(notifyChara, true)
         if (r0 == true) {
@@ -206,12 +211,12 @@ class EquilBLE @Inject constructor(
 
     private fun nextCmd2() {
         dataList = ArrayList()
-        aapsLogger.debug(LTag.PUMPCOMM, "nextCmd===== ${baseCmd?.isEnd}====")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "nextCmd===== ${baseCmd?.isEnd}====")
         baseCmd?.let { baseCmd ->
             equilResponse = baseCmd.getNextEquilResponse()
-            aapsLogger.debug(LTag.PUMPCOMM, "nextCmd===== $baseCmd===${equilResponse?.send}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "nextCmd===== $baseCmd===${equilResponse?.send}")
             if ((equilResponse?.send?.size ?: 0) == 0) {
-                aapsLogger.debug(LTag.PUMPCOMM, "equilResponse is null")
+                aapsLogger.debug(LTag.PUMPBTCOMM, "equilResponse is null")
                 return
             }
             indexData = 0
@@ -235,11 +240,11 @@ class EquilBLE @Inject constructor(
 
     fun closeBleAuto() {
         handler.postDelayed({
-                                disconnect()
-                            }, EquilConst.EQUIL_BLE_NEXT_CMD)
+            disconnect()
+        }, EquilConst.EQUIL_BLE_NEXT_CMD)
     }
 
-    var autoScan = false
+    var autoScan = true
     private fun findEquil(mac: String) {
         if (mac.isEmpty()) return
         if (isConnected) return
@@ -249,14 +254,12 @@ class EquilBLE @Inject constructor(
     }
 
     fun connectEquil(device: BluetoothDevice?) {
-//        disconnect();
         handler.postDelayed({
-                                if (device != null) {
-                                    aapsLogger.debug(LTag.PUMPCOMM, "connectEquil======")
-                                    bluetoothGatt = device.connectGatt(context, false, mGattCallback, BluetoothDevice.TRANSPORT_LE)
-                                    connecting = true
-                                }
-                            }, 500)
+            if (device != null) {
+                aapsLogger.debug(LTag.PUMPCOMM, "connectEquil======")
+                bluetoothGatt = device.connectGatt(context, false, mGattCallback, BluetoothDevice.TRANSPORT_LE)
+            }
+        }, 500)
     }
 
     private var baseCmd: BaseCmd? = null
@@ -265,11 +268,11 @@ class EquilBLE @Inject constructor(
         aapsLogger.debug(LTag.PUMPCOMM, "writeCmd {}", baseCmd)
         this.baseCmd = baseCmd
         val mac: String = when (baseCmd) {
-            is CmdPair          -> baseCmd.address
+            is CmdPair -> baseCmd.address
             is CmdDevicesOldGet -> baseCmd.address
-            else                -> equilManager?.equilState?.address ?: error("Unknown MAC address")
+            else -> equilManager?.equilState?.address ?: error("Unknown MAC address")
         }
-        autoScan = baseCmd is CmdModelGet || baseCmd is CmdInsulinGet
+        autoScan = baseCmd is CmdRunningModeGet || baseCmd is CmdInsulinGet
         if (isConnected && baseCmd.isPairStep()) {
             ready()
         } else if (isConnected) {
@@ -307,7 +310,8 @@ class EquilBLE @Inject constructor(
                     val data = equilResponse.send[indexData].array()
                     write(data)
                     indexData++
-                } else aapsLogger.debug(LTag.PUMPCOMM, "indexData error ")
+                } else { // no more data to send
+                }
             } else aapsLogger.debug(LTag.PUMPCOMM, "equil cmd time out ")
         }
     }
@@ -315,7 +319,7 @@ class EquilBLE @Inject constructor(
     @Suppress("deprecation")
     private fun write(bytes: ByteArray) {
         if (writeChara == null || bluetoothGatt == null) {
-            aapsLogger.debug(LTag.PUMPCOMM, "write disconnect ")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "write disconnect ")
             disconnect()
             return
         }
@@ -325,7 +329,8 @@ class EquilBLE @Inject constructor(
     }
 
     private var dataList: List<String> = ArrayList()
-    @Synchronized fun decode(buffer: ByteArray) {
+    @Synchronized
+    fun decode(buffer: ByteArray) {
         val str = Utils.bytesToHex(buffer)
         aapsLogger.debug(LTag.PUMPBTCOMM, "decode=====$str")
         val response = baseCmd?.decodeEquilPacket(buffer)
@@ -346,11 +351,11 @@ class EquilBLE @Inject constructor(
         }
     }
 
-    var handler: Handler = object : Handler(Looper.getMainLooper()) {
+    var handler: Handler = object : Handler(HandlerThread(this::class.simpleName + "MessageHandler").also { it.start() }.looper) {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             when (msg.what) {
-                TIME_OUT_WHAT         -> stopScan()
+                TIME_OUT_WHAT -> stopScan()
 
                 TIME_OUT_CONNECT_WHAT -> {
                     stopScan()
@@ -365,16 +370,15 @@ class EquilBLE @Inject constructor(
     private var startTrue = false
     private fun startScan() {
         macAddress = equilManager?.equilState?.address
+        aapsLogger.debug(LTag.PUMPBTCOMM, "startScan====$startTrue====$macAddress===")
         if (macAddress.isNullOrEmpty()) return
-        aapsLogger.debug(LTag.PUMPCOMM, "startScan====$startTrue====$macAddress===")
-        if (startTrue) {
-            return
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+        if (startTrue) return
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
             try {
                 val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
                 if (bluetoothLeScanner != null) {
                     updateCmdStatus(ResolvedResult.NOT_FOUNT)
+                    connecting = true
                     bluetoothLeScanner.startScan(buildScanFilters(), buildScanSettings(), scanCallback)
                 }
             } catch (_: IllegalStateException) {
@@ -388,16 +392,15 @@ class EquilBLE @Inject constructor(
         baseCmd?.resolvedResult = result
     }
 
-    val equilStatus: Unit
-        get() {
-            aapsLogger.debug(LTag.PUMPCOMM, "getEquilStatus====$startTrue====$isConnected")
-            if (startTrue || isConnected) {
-                return
-            }
-            autoScan = false
-            baseCmd = null
-            startScan()
+    fun connect(from: String) {
+        aapsLogger.debug(LTag.PUMPCOMM, "connect====startTrue=$startTrue====isConnected=$isConnected from $from")
+        if (startTrue || isConnected) {
+            return
         }
+        autoScan = true
+        baseCmd = null
+        startScan()
+    }
 
     private fun buildScanFilters(): List<ScanFilter> {
         val scanFilterList = ArrayList<ScanFilter>()
@@ -422,7 +425,9 @@ class EquilBLE @Inject constructor(
             val name: String? = result.device.name
             if (name?.isNotEmpty() == true) {
                 try {
-                    bleHandler.post { equilManager?.decodeData(result.scanRecord!!.bytes) }
+                    bleHandler.post {
+                        equilManager?.decodeData(result.scanRecord!!.bytes, autoScan)
+                    }
                     stopScan()
                     if (autoScan) {
                         updateCmdStatus(ResolvedResult.CONNECT_ERROR)

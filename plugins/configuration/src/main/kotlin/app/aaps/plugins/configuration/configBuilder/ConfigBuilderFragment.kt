@@ -64,7 +64,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             .toObservable(EventConfigBuilderUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                           for (pluginViewHolder in pluginViewHolders) pluginViewHolder.update()
+                           for (pluginViewHolder in pluginViewHolders) pluginViewHolder.update(this.requireActivity())
                        }, fabricPrivacy::logException)
         updateGUI()
     }
@@ -103,7 +103,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 activity = requireActivity(),
                 parent = binding.categories
             )
-        if (!config.NSCLIENT) {
+        if (!config.AAPSCLIENT) {
             configBuilder.createViewsForPlugins(
                 title = R.string.configbuilder_bgsource,
                 description = R.string.configbuilder_bgsource_description,
@@ -202,7 +202,7 @@ class ConfigBuilderFragment : DaggerFragment() {
         if (isLocked && !queryingProtection) {
             activity?.let { activity ->
                 queryingProtection = true
-                val doUpdate = { activity.runOnUiThread { queryingProtection = false; updateProtectedUi() } }
+                val doUpdate = { activity.runOnUiThread { queryingProtection = false; if (_binding != null) updateProtectedUi() } }
                 protectionCheck.queryProtection(activity, PREFERENCES, doUpdate, doUpdate, doUpdate)
             }
         }

@@ -148,6 +148,7 @@
         <item name="actionsError">@color/errorAlertBackground</item>
         <item name="automationBackgroundColor">@color/black</item>
         <item name="automationOverlayColor">@color/black_alpha_40</item>
+        <item name="actionColor">@color/actionColor</item>
         <!---BG source -->
         <item name="bgsourceError">@color/errorAlertBackground</item>
         <!---TDD-statistics -->
@@ -173,7 +174,9 @@
         <item name="tempTargetBgInRange">@color/tempTargetConfirmation</item>
         <!---Loop Icon-->
         <!---Loop Paused Icon Color-->
-        <item name="loopPaused">@color/loopSuspended</item>
+        <item name="loopSuspended">@color/loopSuspended</item>
+        <!---Loop LGS Icon Color-->
+        <item name="loopLgs">@color/loopLgs</item>
         <!---Loop Closed Icon Color-->
         <item name="loopClosed">@color/loopClosed</item>
         <!---Loop Disabled Icon Color-->
@@ -439,6 +442,16 @@
         <item name="android:paddingEnd">15dp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">#ff0000</item>
+    </style>
+
+    <style name="Widget.App.RadioButton" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
+        <item name="buttonTint">@color/button_tint</item>
+        <item name="android:minWidth">0dp</item>
+    </style>
+
+    <style name="Widget.App.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="buttonTint">@color/button_tint</item>
+        <item name="android:minWidth">0dp</item>
     </style>
 
 </resources>

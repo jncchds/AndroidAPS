@@ -31,7 +31,7 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
         if (duration.value == 0) rh.gs(R.string.startprofileforever, pct.value.toInt())
         else rh.gs(app.aaps.core.ui.R.string.startprofile, pct.value.toInt(), duration.value)
 
-    @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch
+    @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch_24dp
 
     init {
         precondition = TriggerProfilePercent(injector, 100.0, Comparator.Compare.IS_EQUAL)
@@ -51,10 +51,10 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
                 )
             )
         ) {
-            callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+            callback.result(pumpEnactResultProvider.get().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
         } else {
             aapsLogger.error(LTag.AUTOMATION, "Final profile not valid")
-            callback.result(instantiator.providePumpEnactResult().success(false).comment(app.aaps.core.ui.R.string.ok)).run()
+            callback.result(pumpEnactResultProvider.get().success(false).comment(app.aaps.core.ui.R.string.ok)).run()
         }
     }
 

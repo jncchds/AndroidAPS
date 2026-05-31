@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.utils.receivers.BundleLogger
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import dagger.android.DaggerBroadcastReceiver
-import kotlinx.serialization.InternalSerializationApi
 import javax.inject.Inject
 
 open class WearDataReceiver : DaggerBroadcastReceiver() {
@@ -22,7 +21,6 @@ open class WearDataReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var config: Config
     @Inject lateinit var rxBus: RxBus
 
-    @InternalSerializationApi
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         val bundle = intent.extras ?: return
@@ -38,7 +36,7 @@ open class WearDataReceiver : DaggerBroadcastReceiver() {
                 }
                 // Check for allowed configuration
                 if (
-                    config.NSCLIENT1 && client == 2 ||
+                    config.AAPSCLIENT1 && client == 2 ||
                     (config.APS || config.PUMPCONTROL) && (client == 1 || client == 2)
                 ) {
                     // Send to phone

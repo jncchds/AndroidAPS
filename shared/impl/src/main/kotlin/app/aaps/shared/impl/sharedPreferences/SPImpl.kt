@@ -107,71 +107,61 @@ class SPImpl @Inject constructor(
     override fun getStringOrNull(key: String, defaultValue: String?): String? =
         sharedPreferences.getString(key, defaultValue)
 
-    override fun getBoolean(resourceID: Int, defaultValue: Boolean): Boolean {
-        return try {
-            sharedPreferences.getBoolean(context.getString(resourceID), defaultValue)
-        } catch (e: Exception) {
-            defaultValue
-        }
-    }
+    override fun getBoolean(resourceID: Int, defaultValue: Boolean): Boolean =
+        sharedPreferences.getBoolean(context.getString(resourceID), defaultValue)
 
-    override fun getBoolean(key: String, defaultValue: Boolean): Boolean {
-        return try {
+    override fun getBoolean(key: String, defaultValue: Boolean): Boolean =
+        try {
             sharedPreferences.getBoolean(key, defaultValue)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             defaultValue
         }
-    }
 
     override fun getDouble(resourceID: Int, defaultValue: Double): Double =
-        SafeParse.stringToDouble(sharedPreferences.getString(context.getString(resourceID), defaultValue.toString()), defaultValue)
+        try {
+            sharedPreferences.getFloat(context.getString(resourceID), defaultValue.toFloat()).toDouble()
+        } catch (_: Exception) {
+            SafeParse.stringToDouble(sharedPreferences.getString(context.getString(resourceID), defaultValue.toString()), defaultValue)
+        }
 
     override fun getDouble(key: String, defaultValue: Double): Double =
-        SafeParse.stringToDouble(sharedPreferences.getString(key, defaultValue.toString()), defaultValue)
+        try {
+            sharedPreferences.getFloat(key, defaultValue.toFloat()).toDouble()
+        } catch (_: Exception) {
+            SafeParse.stringToDouble(sharedPreferences.getString(key, defaultValue.toString()), defaultValue)
+        }
 
-    override fun getInt(resourceID: Int, defaultValue: Int): Int {
-        return try {
+    override fun getInt(resourceID: Int, defaultValue: Int): Int =
+        try {
             sharedPreferences.getInt(context.getString(resourceID), defaultValue)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             SafeParse.stringToInt(sharedPreferences.getString(context.getString(resourceID), defaultValue.toString()), defaultValue)
         }
-    }
 
-    override fun getInt(key: String, defaultValue: Int): Int {
-        return try {
+    override fun getInt(key: String, defaultValue: Int): Int =
+        try {
             sharedPreferences.getInt(key, defaultValue)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             SafeParse.stringToInt(sharedPreferences.getString(key, defaultValue.toString()), defaultValue)
         }
-    }
 
-    override fun getLong(resourceID: Int, defaultValue: Long): Long {
-        return try {
+    override fun getLong(resourceID: Int, defaultValue: Long): Long =
+        try {
             sharedPreferences.getLong(context.getString(resourceID), defaultValue)
-        } catch (e: Exception) {
-            try {
-                SafeParse.stringToLong(sharedPreferences.getString(context.getString(resourceID), defaultValue.toString()), defaultValue)
-            } catch (e1: Exception) {
-                return defaultValue
-            }
+        } catch (_: Exception) {
+            SafeParse.stringToLong(sharedPreferences.getString(context.getString(resourceID), defaultValue.toString()), defaultValue)
         }
-    }
 
-    override fun getLong(key: String, defaultValue: Long): Long {
-        return try {
+    override fun getLong(key: String, defaultValue: Long): Long =
+        try {
             sharedPreferences.getLong(key, defaultValue)
-        } catch (e: Exception) {
-            try {
-                SafeParse.stringToLong(sharedPreferences.getString(key, defaultValue.toString()), defaultValue)
-            } catch (e1: Exception) {
-                return defaultValue
-            }
+        } catch (_: Exception) {
+            SafeParse.stringToLong(sharedPreferences.getString(key, defaultValue.toString()), defaultValue)
         }
-    }
 
-    override fun incLong(resourceID: Int) {
-        val value = getLong(resourceID, 0) + 1L
-        sharedPreferences.edit().putLong(context.getString(resourceID), value).apply()
+    override fun incLong(key: String) {
+        val value = getLong(key, 0) + 1L
+        sharedPreferences.edit().putLong(key, value).apply()
     }
 
     override fun putBoolean(key: String, value: Boolean) = sharedPreferences.edit().putBoolean(key, value).apply()
@@ -180,11 +170,10 @@ class SPImpl @Inject constructor(
         sharedPreferences.edit().putBoolean(context.getString(resourceID), value).apply()
 
     override fun putDouble(key: String, value: Double) =
-        sharedPreferences.edit().putString(key, value.toString()).apply()
+        sharedPreferences.edit().putFloat(key, value.toFloat()).apply()
 
-    override fun putDouble(resourceID: Int, value: Double) {
-        sharedPreferences.edit().putString(context.getString(resourceID), value.toString()).apply()
-    }
+    override fun putDouble(resourceID: Int, value: Double) =
+        sharedPreferences.edit().putFloat(context.getString(resourceID), value.toFloat()).apply()
 
     override fun putLong(key: String, value: Long) =
         sharedPreferences.edit().putLong(key, value).apply()
@@ -198,9 +187,9 @@ class SPImpl @Inject constructor(
     override fun putInt(resourceID: Int, value: Int) =
         sharedPreferences.edit().putInt(context.getString(resourceID), value).apply()
 
-    override fun incInt(resourceID: Int) {
-        val value = getInt(resourceID, 0) + 1
-        sharedPreferences.edit().putInt(context.getString(resourceID), value).apply()
+    override fun incInt(key: String) {
+        val value = getInt(key, 0) + 1
+        sharedPreferences.edit().putInt(key, value).apply()
     }
 
     override fun putString(resourceID: Int, value: String) =

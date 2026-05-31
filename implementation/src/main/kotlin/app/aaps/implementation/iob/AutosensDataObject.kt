@@ -6,11 +6,12 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import java.util.Locale
+import javax.inject.Inject
 import kotlin.math.min
 
-class AutosensDataObject(
+class AutosensDataObject @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val preferences: Preferences,
     private val dateUtil: DateUtil
@@ -23,7 +24,7 @@ class AutosensDataObject(
     override var deviation = 0.0
     override var validDeviation = false
     override var activeCarbsList: MutableList<AutosensData.CarbsInPast> = ArrayList()
-    override var absorbed = 0.0
+    override var this5MinAbsorption = 0.0
     override var carbsFromBolus = 0.0
     override var cob = 0.0
     override var bgi = 0.0
@@ -62,7 +63,7 @@ class AutosensDataObject(
             bgi,
             deviation,
             avgDeviation,
-            absorbed,
+            this5MinAbsorption,
             carbsFromBolus,
             cob,
             autosensResult.ratio,
@@ -98,7 +99,7 @@ class AutosensDataObject(
     }
 
     override fun deductAbsorbedCarbs() {
-        var ac = absorbed
+        var ac = this5MinAbsorption
         var i = 0
         while (i < activeCarbsList.size && ac > 0) {
             val c = activeCarbsList[i]

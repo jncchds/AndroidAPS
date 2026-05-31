@@ -1,7 +1,6 @@
 package app.aaps.core.validators.preferences
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.text.InputType
 import android.util.AttributeSet
 import androidx.annotation.StringRes
@@ -10,8 +9,8 @@ import androidx.preference.PreferenceViewHolder
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.keys.IntPreferenceKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.IntPreferenceKey
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
 import app.aaps.core.validators.R
@@ -34,7 +33,6 @@ class AdaptiveIntPreference(
 
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var preferences: Preferences
-    @Inject lateinit var sharedPrefs: SharedPreferences
     @Inject lateinit var config: Config
 
     // Inflater constructor
@@ -64,15 +62,14 @@ class AdaptiveIntPreference(
             isVisible = false; isEnabled = false
         }
         preferenceKey.dependency?.let {
-            if (!sharedPrefs.getBoolean(it.key, false))
+            if (!preferences.get(it))
                 isVisible = false
         }
         preferenceKey.negativeDependency?.let {
-            if (sharedPrefs.getBoolean(it.key, false))
+            if (preferences.get(it))
                 isVisible = false
         }
-        if (validatorParams != null) validatorParameters = validatorParams
-        else validatorParameters = obtainValidatorParameters(attrs)
+        validatorParameters = validatorParams ?: obtainValidatorParameters(attrs)
         setOnBindEditTextListener { editText ->
             validator = DefaultEditTextValidator(editText, validatorParameters, context)
             if (preferenceKey.min < 0)
@@ -81,6 +78,7 @@ class AdaptiveIntPreference(
                 editText.inputType = InputType.TYPE_CLASS_NUMBER
             editText.setSelectAllOnFocus(true)
             editText.setSingleLine()
+            editText.setSelection(editText.length())
         }
         setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) != false }
         setDefaultValue(preferenceKey.defaultValue)
@@ -119,16 +117,16 @@ class AdaptiveIntPreference(
 
     override fun onSetInitialValue(defaultValue: Any?) {
         text = try {
-            getPersistedString(defaultValue as String?)
-        } catch (ignored: Exception) {
             getPersistedInt(preferenceKey.defaultValue).toString()
+        } catch (_: Exception) {
+            getPersistedString(defaultValue as String?)
         }
     }
 
     override fun persistString(value: String?): Boolean =
         try {
-            super.persistString(SafeParse.stringToInt(value, 0).toString())
-        } catch (ignored: Exception) {
-            false
+            super.persistInt(SafeParse.stringToInt(value))
+        } catch (_: Exception) {
+            super.persistString(SafeParse.stringToInt(value).toString())
         }
 }

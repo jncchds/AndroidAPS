@@ -50,7 +50,6 @@
     <string name="smscommunicator_tt_canceled">臨時目標取消成功</string>
     <string name="smscommunicator_remote_commands_allowed">允許通過SMS進行遠端命令</string>
     <string name="smscommunicator_loop_has_been_disabled">循環已停用</string>
-    <string name="smscommunicator_loop_has_been_enabled">循環已啟用</string>
     <string name="smscommunicator_loop_is_enabled">循環已啟用</string>
     <string name="smscommunicator_pump_connect_with_code">要連線幫浦請回覆代碼 %1$s</string>
     <string name="smscommunicator_pump_connect_fail">連線幫浦失敗</string>
@@ -58,6 +57,7 @@
     <string name="smscommunicator_pump_disconnected">幫浦已中斷連線</string>
     <string name="smscommunicator_reconnect">幫浦已重新連線</string>
     <string name="smscommunicator_remote_command_not_allowed">不允許遠端命令</string>
+    <string name="smscommunicator_remote_command_not_possible">無法進行遠端指令</string>
     <string name="smscommunicator_remote_bolus_not_allowed">遠端注射不可用。請稍後再試。</string>
     <string name="smscommunicator_basal_reply_with_code">要開始基礎速率 %1$.2f U/h 持續 %2$d 分鐘請回覆代碼 %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">要將設定檔切換為 %1$s %2$d%% 請回覆代碼 %3$s</string>
@@ -66,8 +66,9 @@
     <string name="smscommunicator_basal_pct_reply_with_code">要開始基礎速率 %1$d%% 持續 %2$d 分鐘請回覆代碼 %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">要暫停循環 %1$d 分鐘請回覆代碼 %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">要恢復循環請回覆代碼 %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">要啟用循環請回覆代碼 %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">要停用循環請回覆代碼 %1$s</string>
+    <string name="smscommunicator_restart_reply_with_code">To restart AAPS reply with code %1$s</string>
+    <string name="smscommunicator_restarting">AAPS 正在重新啟動</string>
     <string name="smscommunicator_tempbasal_set">臨時基礎速率 %1$.2fU/h 持續 %2$d 分鐘已成功開始</string>
     <string name="smscommunicator_extended_set">延長注射 %1$.2fU 持續 %2$d 分鐘已成功開始</string>
     <string name="smscommunicator_carbs_set">碳水化合物 %1$d g 已成功輸入</string>
@@ -130,7 +131,7 @@
     <!-- Profile -->
     <string name="localprofile">設定檔</string>
     <string name="localprofile_shortname">設定</string>
-    <string name="description_profile_local">定義一個可離線使用的配置。</string>
+    <string name="description_profile_local">建立描述你胰島素需求的設定檔。</string>
     <string name="a11y_add_new_to_list">添加新項到列表</string>
     <string name="do_you_want_switch_profile">您是否要切換設定檔，並放棄對目前設定檔所做的更改？</string>
     <string name="save_or_reset_changes_first">首先儲存或重置目前更改</string>
@@ -153,8 +154,8 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">目標</string>
     <string name="basal_short">基礎速率</string>
-    <string name="isf_dynamic_label">你已啟用動態計算 ISF，以下數值僅在資料遺失時作為備用。</string>
-    <string name="ic_dynamic_label">你已啟用動態計算 IC，以下數值僅在資料遺失時作為備用。</string>
+    <string name="isf_dynamic_label_warning">你的演算法可以動態計算 ISF（胰島素敏感因子）。以下數值僅在資料遺失時作為備援使用。</string>
+    <string name="ic_dynamic_label_warning">你的演算法可以動態計算 IC（碳水化合物比值）。以下數值僅在資料遺失時作為備援使用。</string>
     <!-- Actions -->
     <string name="actions">手動操作</string>
     <string name="description_actions">一些快速查看常用功能的按鈕</string>
@@ -163,6 +164,7 @@
     <string name="extended_bolus_button">延長注射</string>
     <string name="extended_bolus_cancel_button">取消延長注射</string>
     <string name="tools">工具</string>
+    <string name="site_rotation">部位輪替</string>
     <string name="nav_history_browser">歷史瀏覽器</string>
     <string name="sensor_label">傳感器</string>
     <string name="age_label">時間：</string>
@@ -216,11 +218,8 @@
     <string name="overview_shortname">主頁</string>
     <string name="description_overview">顯示目前循環狀態和最常用操作的按鈕</string>
     <string name="overview_buttons_selection">按鈕</string>
-    <string name="show_calibration_button_summary">以下是翻譯成台灣繁體中文的結果：
-
-發送校準到 xDrip+（請確保在 xDrip+ 的設定中啟用「接受校準」功能）。</string>
-    <string name="show_cgm_button_summary">開啟 xDrip+（您可以使用返回按鈕返回 AAPS）。</string>
-    <string name="error_starting_cgm">無法啟動CGM應用。請確保其已安裝。</string>
+    <string name="show_calibration_button_summary">發送校準到 xDrip+（請確保在 xDrip+ 的設定中啟用「接受校準」功能）。</string>
+    <string name="show_cgm_button_summary">打開 xDrip+ 或 Dexcom 應用程式（您可以使用返回鍵回到 AAPS）。</string>
     <string name="not_available_full">不可用</string>
     <string name="constraints_violation">約束違反</string>
     <string name="change_your_input">更改您的輸入！</string>
@@ -300,7 +299,7 @@
     <string name="buttonson_description">按鈕總是顯示在螢幕底部</string>
     <string name="largedisplay_description">大顯示</string>
     <string name="skin">外觀</string>
-    <string name="cannula_usage">使用情況：</string>
+    <string name="cannula_usage">使用量：</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">顯示持續通知，簡要概述您的循環正在執行的操作</string>

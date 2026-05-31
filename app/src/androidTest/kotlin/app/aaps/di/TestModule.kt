@@ -4,10 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.implementation.instantiator.InstantiatorImpl
 import app.aaps.implementations.ConfigImpl
 import app.aaps.implementations.UiInteractionImpl
 import dagger.Binds
@@ -42,7 +40,7 @@ open class TestModule {
         val plugins = allConfigs.toMutableMap()
         if (config.PUMPDRIVERS) plugins += pumpDrivers.get()
         if (config.APS) plugins += aps.get()
-        if (!config.NSCLIENT) plugins += notNsClient.get()
+        if (!config.AAPSCLIENT) plugins += notNsClient.get()
         //if (config.isUnfinishedMode()) plugins += unfinished.get()
         return plugins.toList().sortedBy { it.first }.map { it.second }
     }
@@ -63,8 +61,6 @@ open class TestModule {
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 
         @Binds fun bindActivityNames(activityNames: UiInteractionImpl): UiInteraction
-        @Binds fun bindInstantiator(instantiatorImpl: InstantiatorImpl): Instantiator
-
     }
 }
 

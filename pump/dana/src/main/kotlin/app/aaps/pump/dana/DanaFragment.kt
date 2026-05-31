@@ -29,7 +29,6 @@ import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.rx.events.EventTempBasalChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -53,7 +52,6 @@ class DanaFragment : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var sp: SP
     @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -63,7 +61,8 @@ class DanaFragment : DaggerFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
-    private lateinit var refreshLoop: Runnable
+    private var refreshLoop: Runnable
+
     private var pumpStatus = ""
     private var pumpStatusIcon = "{fa-bluetooth-b}"
 
@@ -182,9 +181,16 @@ class DanaFragment : DaggerFragment() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
-        handler.removeCallbacks(refreshLoop)
+        handler.removeCallbacksAndMessages(null)
         pumpStatus = ""
         pumpStatusIcon = "{fa-bluetooth-b}"
+    }
+
+    @Synchronized
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+        handler.looper.quitSafely()
     }
 
     @Synchronized
@@ -232,8 +238,8 @@ class DanaFragment : DaggerFragment() {
         binding.extendedbolus.text = danaPump.extendedBolusToString()
         binding.reservoir.text = rh.gs(app.aaps.core.ui.R.string.reservoir_value, pump.reservoirRemainingUnits, 300)
         warnColors.setColorInverse(binding.reservoir, pump.reservoirRemainingUnits, 50, 20)
-        binding.battery.text = "{fa-battery-" + pump.batteryRemaining / 25 + "}"
-        warnColors.setColorInverse(binding.battery, pump.batteryRemaining.toDouble(), 51, 26)
+        binding.battery.text = pump.batteryRemaining?.let { "{fa-battery-" + it / 25 + "}" } ?: rh.gs(app.aaps.core.ui.R.string.unknown)
+        warnColors.setColorInverse(binding.battery, (pump.batteryRemaining?.toDouble() ?: 100.0), 51, 26)
         binding.firmware.text = rh.gs(R.string.dana_model, pump.modelFriendlyName(), pump.hwModel, pump.protocol, pump.productCode)
         binding.basalBolusStep.text = pump.basalStep.toString() + "/" + pump.bolusStep.toString()
         binding.serialNumber.text = pump.serialNumber

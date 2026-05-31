@@ -17,10 +17,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.DoubleKey
-import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.store
 import app.aaps.core.utils.MidnightUtils
@@ -38,7 +37,6 @@ import kotlin.math.roundToInt
 class SensitivityOref1Plugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    sp: SP,
     preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
@@ -53,7 +51,7 @@ class SensitivityOref1Plugin @Inject constructor(
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
         .description(R.string.description_sensitivity_oref1)
         .setDefault(),
-    aapsLogger, rh, sp, preferences
+    aapsLogger, rh, preferences
 ), PluginConstraints {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
@@ -243,7 +241,7 @@ class SensitivityOref1Plugin @Inject constructor(
             key = "sensitivity_oref1_settings"
             title = rh.gs(R.string.absorption_settings_title)
             initialExpandedChildrenCount = 0
-            addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsAmaMin5MinCarbsImpact, dialogMessage = R.string.openapsama_min_5m_carb_impact_summary, title = R.string.openapsama_min_5m_carb_impact))
+            addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.ApsSmbMin5MinCarbsImpact, dialogMessage = R.string.openapsama_min_5m_carb_impact_summary, title = R.string.openapsama_min_5m_carb_impact))
             addPreference(AdaptiveDoublePreference(ctx = context, doubleKey = DoubleKey.AbsorptionCutOff, dialogMessage = R.string.absorption_cutoff_summary, title = R.string.absorption_cutoff_title))
             addPreference(preferenceManager.createPreferenceScreen(context).apply {
                 key = "absorption_oref1_advanced"
