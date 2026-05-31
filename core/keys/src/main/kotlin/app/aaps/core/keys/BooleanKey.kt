@@ -122,6 +122,7 @@ enum class BooleanKey(
     SiteRotationManagePump("site_rotation_manage_pump", defaultValue = false),
     SiteRotationManageCgm("site_rotation_manage_cgm", defaultValue = false),
     DisableUpdateCheck("disable_update_check", defaultValue = false),
+    EngineeringMode("engineering_mode", false),
 
     // Export destination settings
     ExportAllCloudEnabled("export_all_cloud_enabled", defaultValue = false),

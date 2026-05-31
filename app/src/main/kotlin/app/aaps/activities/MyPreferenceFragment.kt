@@ -175,7 +175,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         if (key == BooleanKey.OverviewShortTabTitles.key || key == BooleanKey.GeneralSimpleMode.key) {
             rxBus.send(EventRebuildTabs())
         }
-        if (key == StringKey.GeneralUnits.key || key == BooleanKey.GeneralSimpleMode.key || preferences.getDependingOn(key).isNotEmpty()) {
+        if (key == StringKey.GeneralUnits.key || key == BooleanKey.GeneralSimpleMode.key || key == BooleanKey.EngineeringMode.key || preferences.getDependingOn(key).isNotEmpty()) {
             activity?.recreate()
             return
         }
@@ -504,6 +504,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             )
             addPreference(AdaptiveIntPreference(ctx = context, intKey = IntKey.ProtectionTimeout, title = app.aaps.core.ui.R.string.protection_timeout_title, summary = app.aaps.core.ui.R.string.protection_timeout_summary))
             addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.DisableUpdateCheck, title = app.aaps.core.ui.R.string.disable_update_check_title, summary = app.aaps.core.ui.R.string.disable_update_check_summary))
+            addPreference(AdaptiveSwitchPreference(ctx = context, booleanKey = BooleanKey.EngineeringMode, title = app.aaps.plugins.configuration.R.string.engineering_mode_enabled))
         }
     }
 
