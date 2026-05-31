@@ -121,6 +121,7 @@ enum class BooleanKey(
     WizardIncludeTrend("wizard_include_trend_bg", defaultValue = false),
     SiteRotationManagePump("site_rotation_manage_pump", defaultValue = false),
     SiteRotationManageCgm("site_rotation_manage_cgm", defaultValue = false),
+    DisableUpdateCheck("disable_update_check", defaultValue = false),
 
     // Export destination settings
     ExportAllCloudEnabled("export_all_cloud_enabled", defaultValue = false),
