@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBaseWithPreferences
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.BooleanNonKey
 import app.aaps.core.keys.IntNonKey
 import app.aaps.core.keys.interfaces.Preferences
@@ -31,6 +32,7 @@ class ObjectivesPlugin @Inject constructor(
     rh: ResourceHelper,
     preferences: Preferences,
     config: Config,
+    val dateUtil: DateUtil,
     val objectives: List<@JvmSuppressWildcards Objective>
 ) : PluginBaseWithPreferences(
     pluginDescription = PluginDescription()
@@ -60,6 +62,32 @@ class ObjectivesPlugin @Inject constructor(
         preferences.put(BooleanNonKey.ObjectivesActionsUsed, false)
         preferences.put(BooleanNonKey.ObjectivesLoopUsed, false)
         preferences.put(BooleanNonKey.ObjectivesScaleUsed, false)
+    }
+
+    fun completeAll() {
+        val now = dateUtil.now()
+        for (objective in objectives) {
+            objective.startedOn = now
+            objective.accomplishedOn = now
+            for (task in objective.tasks) {
+                if (task is Objective.UITask) {
+                    task.answered = true
+                }
+                if (task is Objective.ExamTask) {
+                    task.answered = true
+                }
+            }
+        }
+        preferences.put(BooleanNonKey.ObjectivesBgIsAvailableInNs, true)
+        preferences.put(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS, true)
+        preferences.put(IntNonKey.ObjectivesManualEnacts, 100)
+        preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)
+        preferences.put(BooleanNonKey.ObjectivesDisconnectUsed, true)
+        preferences.put(BooleanNonKey.ObjectivesReconnectUsed, true)
+        preferences.put(BooleanNonKey.ObjectivesTempTargetUsed, true)
+        preferences.put(BooleanNonKey.ObjectivesActionsUsed, true)
+        preferences.put(BooleanNonKey.ObjectivesLoopUsed, true)
+        preferences.put(BooleanNonKey.ObjectivesScaleUsed, true)
     }
 
     fun allPriorAccomplished(position: Int): Boolean {

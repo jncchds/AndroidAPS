@@ -33,6 +33,14 @@
             android:text="Reset"
             tools:ignore="HardcodedText" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/complete"
+            style="@style/OkCancelButton.Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Complete"
+            tools:ignore="HardcodedText" />
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

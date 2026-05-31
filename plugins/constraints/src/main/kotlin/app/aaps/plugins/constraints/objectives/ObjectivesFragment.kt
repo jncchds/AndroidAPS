@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
@@ -56,6 +57,7 @@ class ObjectivesFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var sntpClient: SntpClient
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var config: Config
 
     private val objectivesAdapter = ObjectivesAdapter()
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -87,6 +89,14 @@ class ObjectivesFragment : DaggerFragment() {
             objectivesPlugin.reset()
             updateGUI()
             scrollToCurrentObjective()
+        }
+        binding.complete.setOnClickListener {
+            objectivesPlugin.completeAll()
+            updateGUI()
+            scrollToCurrentObjective()
+        }
+        if (config.isEngineeringMode()) {
+            (binding.reset.parent as View).visibility = View.VISIBLE
         }
         scrollToCurrentObjective()
     }
