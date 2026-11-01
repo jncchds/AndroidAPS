@@ -285,6 +285,11 @@ enum class BooleanKey(
 
     SiteRotationManagePump("site_rotation_manage_pump", defaultValue = false, title = KeysStrings.pref_title_site_rotation_manage_pump, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
     SiteRotationManageCgm("site_rotation_manage_cgm", defaultValue = false, title = KeysStrings.pref_title_site_rotation_manage_cgm, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    // Android only: the version checker exists only on Android.
+    DisableUpdateCheck(
+        "disable_update_check", defaultValue = false, title = KeysStrings.pref_title_disable_update_check, summary = KeysStrings.pref_summary_disable_update_check,
+        platforms = AppPlatform.ANDROID_ONLY
+    ),
 
     ;
 

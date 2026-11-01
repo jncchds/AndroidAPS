@@ -167,6 +167,7 @@ diaconn_g8_loginsulinchange|DiaconnBooleanKey|true
 diaconn_g8_logneedlechange|DiaconnBooleanKey|true
 diaconn_g8_logtubechange|DiaconnBooleanKey|true
 diagonn_g8_address|DiaconnStringNonKey|true
+disable_update_check|BooleanKey|true
 dura_ISF_weight|DoubleKey|true
 dynisf_adjust_sensitivity|BooleanKey|true
 eat_reminder|StringNonKey|false
