@@ -866,6 +866,7 @@ open class OpenAPSAutoISFPlugin(
             BooleanKey.ApsAutoIsfHighTtRaisesSens,
             BooleanKey.ApsAutoIsfLowTtLowersSens,
             IntKey.ApsAutoIsfHalfBasalExerciseTarget,
+            BooleanKey.ApsIgnoreBgSource,
             BooleanKey.ApsUseSmb,
             BooleanKey.ApsUseSmbWithHighTt,
             BooleanKey.ApsUseSmbAlways,

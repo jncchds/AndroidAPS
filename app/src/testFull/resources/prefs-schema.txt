@@ -173,6 +173,7 @@ eat_reminder|StringNonKey|false
 email_for_crash_report|StringKey|true
 enableSMB_after_carbs|BooleanKey|true
 enableSMB_always|BooleanKey|true
+enableSMB_ignore|BooleanKey|true
 enableSMB_with_COB|BooleanKey|true
 enableSMB_with_high_temptarget|BooleanKey|true
 enableSMB_with_temptarget|BooleanKey|true

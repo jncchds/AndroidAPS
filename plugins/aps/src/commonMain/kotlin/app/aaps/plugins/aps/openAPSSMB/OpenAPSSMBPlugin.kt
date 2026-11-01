@@ -561,6 +561,7 @@ open class OpenAPSSMBPlugin(
             BooleanKey.ApsDynIsfAdjustSensitivity,
             BooleanKey.ApsSensitivityRaisesTarget,
             BooleanKey.ApsResistanceLowersTarget,
+            BooleanKey.ApsIgnoreBgSource,
             BooleanKey.ApsUseSmb,
             BooleanKey.ApsUseSmbWithHighTt,
             BooleanKey.ApsUseSmbAlways,

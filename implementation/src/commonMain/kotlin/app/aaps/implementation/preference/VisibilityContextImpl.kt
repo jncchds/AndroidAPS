@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.rx.collectResilient
 import app.aaps.core.interfaces.sync.NsClient
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.interfaces.ClientRole
 import app.aaps.core.keys.interfaces.Preferences
 import app.aaps.core.keys.interfaces.VisibilityContext
@@ -90,8 +91,10 @@ class VisibilityContextImpl(
     override val isRefillingCapable: Boolean
         get() = activePlugin.activePump.pumpDescription.isRefillingCapable
 
+    // The user can choose to ignore the BG source check. Then the SMB settings that need advanced
+    // filtering are shown too, the same way `SafetyPlugin.isAdvancedFilteringEnabled` allows them.
     override val advancedFilteringSupported: Boolean
-        get() = cachedAdvancedFiltering
+        get() = cachedAdvancedFiltering || preferences.get(BooleanKey.ApsIgnoreBgSource)
 
     override val isPumpInitialized: Boolean
         get() = activePlugin.activePump.isInitialized()

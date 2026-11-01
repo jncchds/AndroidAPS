@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
@@ -96,7 +97,8 @@ class SafetyPlugin(
     }
 
     override suspend fun isAdvancedFilteringEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        if (!persistenceLayer.isAdvancedFilteringSupported()) value.set(false, rh.gs(ConstraintsStrings.smbalwaysdisabled), this)
+        val ignore = preferences.get(BooleanKey.ApsIgnoreBgSource)
+        if (!ignore && !persistenceLayer.isAdvancedFilteringSupported()) value.set(false, rh.gs(ConstraintsStrings.smbalwaysdisabled), this)
         return value
     }
 

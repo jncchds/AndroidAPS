@@ -128,6 +128,7 @@ enum class BooleanKey(
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     ApsUseUam("use_uam", true, KeysStrings.pref_title_aps_use_uam, KeysStrings.pref_summary_aps_use_uam, defaultedBySM = true, sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)),
+    ApsIgnoreBgSource("enableSMB_ignore", false, KeysStrings.pref_title_aps_ignore_bg_source, KeysStrings.pref_summary_aps_ignore_bg_source),
     ApsSensitivityRaisesTarget(
         "sensitivity_raises_target", true, KeysStrings.pref_title_aps_sensitivity_raises_target, KeysStrings.pref_summary_aps_sensitivity_raises_target, defaultedBySM = true,
         visibility = ElementVisibility {
