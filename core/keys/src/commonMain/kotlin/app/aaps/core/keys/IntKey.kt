@@ -324,7 +324,7 @@ enum class IntKey(
         key = "smbmaxminutes",
         defaultValue = 30,
         min = 15,
-        max = 120,
+        max = 420,
         title = KeysStrings.pref_title_smb_max_minutes,
         defaultedBySM = true,
         dependency = BooleanKey.ApsUseSmb,
@@ -332,7 +332,7 @@ enum class IntKey(
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
     ),
     ApsUamMaxMinutesOfBasalToLimitSmb(
-        key = "uamsmbmaxminutes", defaultValue = 30, min = 15, max = 120, title = KeysStrings.pref_title_uam_smb_max_minutes, summary = KeysStrings.uam_smb_max_minutes, defaultedBySM = true, dependency = BooleanKey.ApsUseSmb,
+        key = "uamsmbmaxminutes", defaultValue = 30, min = 15, max = 420, title = KeysStrings.pref_title_uam_smb_max_minutes, summary = KeysStrings.uam_smb_max_minutes, defaultedBySM = true, dependency = BooleanKey.ApsUseSmb,
         visibility = ElementVisibility { it.preferences.get(BooleanKey.ApsUseUam) },
         unitType = UnitType.MIN,
         sync = SyncSpec(SyncChannel.Cold, SyncDirection.Bidirectional)
