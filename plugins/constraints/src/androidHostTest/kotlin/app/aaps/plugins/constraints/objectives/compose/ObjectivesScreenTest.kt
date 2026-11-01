@@ -106,6 +106,7 @@ class ObjectivesScreenTest {
                     state = state,
                     onFakeModeToggle = {},
                     onReset = {},
+                    onCompleteAll = {},
                     onStart = {},
                     onVerify = {},
                     onRequestUnstart = {},

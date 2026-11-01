@@ -40,6 +40,7 @@ class ObjectivesComposeContent : ComposablePluginContent {
             state = state,
             onFakeModeToggle = viewModel::onFakeModeToggle,
             onReset = viewModel::onReset,
+            onCompleteAll = viewModel::onCompleteAll,
             onStart = viewModel::onStart,
             onVerify = viewModel::onVerify,
             onRequestUnstart = viewModel::onRequestUnstart,

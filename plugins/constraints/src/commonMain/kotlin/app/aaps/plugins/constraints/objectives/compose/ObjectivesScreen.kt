@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.RestartAlt
@@ -69,6 +70,7 @@ fun ObjectivesScreen(
     state: ObjectivesUiState,
     onFakeModeToggle: (Boolean) -> Unit,
     onReset: () -> Unit,
+    onCompleteAll: () -> Unit,
     onStart: (Int) -> Unit,
     onVerify: (Int) -> Unit,
     onRequestUnstart: (Int) -> Unit,
@@ -94,7 +96,8 @@ fun ObjectivesScreen(
             DebugControls(
                 isFakeMode = state.isFakeMode,
                 onFakeModeToggle = onFakeModeToggle,
-                onReset = onReset
+                onReset = onReset,
+                onCompleteAll = onCompleteAll
             )
         }
 
@@ -131,7 +134,8 @@ fun ObjectivesScreen(
 private fun DebugControls(
     isFakeMode: Boolean,
     onFakeModeToggle: (Boolean) -> Unit,
-    onReset: () -> Unit
+    onReset: () -> Unit,
+    onCompleteAll: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -162,6 +166,16 @@ private fun DebugControls(
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text("Reset")
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        OutlinedButton(onClick = onCompleteAll) {
+            Icon(
+                imageVector = Icons.Default.DoneAll,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text("Complete")
         }
     }
     HorizontalDivider()

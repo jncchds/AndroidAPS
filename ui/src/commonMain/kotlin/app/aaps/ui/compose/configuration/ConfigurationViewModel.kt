@@ -191,7 +191,7 @@ class ConfigurationViewModel(
 
         // A category is also shown on a client when its selection syncs (clientSynced, SSOT-derived) — folded
         // into each existing gate (rather than appended) so client and master keep the same category order.
-        if (!config.AAPSCLIENT) addCategory(PluginType.BGSOURCE)
+        if (!config.AAPSCLIENT || config.isEngineeringMode()) addCategory(PluginType.BGSOURCE)
         if (!config.AAPSCLIENT || clientSynced(PluginType.SMOOTHING)) addCategory(PluginType.SMOOTHING)
         if (!config.AAPSCLIENT || clientSynced(PluginType.CALIBRATION)) addCategory(PluginType.CALIBRATION)
         if (!config.AAPSCLIENT) addCategory(PluginType.PUMP)

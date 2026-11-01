@@ -6,6 +6,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
@@ -57,7 +58,8 @@ class ObjectivesViewModel(
     private val receiverStatusStore: ReceiverStatusStore,
     private val aapsLogger: AAPSLogger,
     private val uel: UserEntryLogger,
-    private val preferences: Preferences
+    private val preferences: Preferences,
+    private val config: Config
 ) : ViewModel() {
 
     private val scope get() = viewModelScope
@@ -158,7 +160,7 @@ class ObjectivesViewModel(
             )
         }
 
-        _uiState.update { it.copy(objectives = objectives) }
+        _uiState.update { it.copy(objectives = objectives, showDebugControls = config.isEngineeringMode()) }
     }
 
     fun onDismissNtpDialog() {
@@ -172,6 +174,15 @@ class ObjectivesViewModel(
 
     fun onReset() {
         objectivesPlugin.reset()
+        scope.launch {
+            updateState()
+            scrollToCurrentObjective()
+        }
+    }
+
+    fun onCompleteAll() {
+        // -1000ms: Objective.isAccomplished uses strict `<` comparison with dateUtil.now()
+        objectivesPlugin.completeAll(dateUtil.now() - 1000)
         scope.launch {
             updateState()
             scrollToCurrentObjective()

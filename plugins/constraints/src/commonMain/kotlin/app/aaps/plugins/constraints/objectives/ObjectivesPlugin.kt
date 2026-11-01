@@ -82,6 +82,32 @@ class ObjectivesPlugin(
         preferences.put(BooleanNonKey.ObjectivesScaleUsed, false)
     }
 
+    /**
+     * Mark all objectives and their tasks as done. Only for engineering mode.
+     *
+     * @param now time to store as start and finish. `Objective.isAccomplished` compares with `<`,
+     *            so pass a time a little in the past.
+     */
+    fun completeAll(now: Long) {
+        for (objective in objectives) {
+            objective.startedOn = now
+            objective.accomplishedOn = now
+            for (task in objective.tasks) {
+                if (task is Objective.UITask) task.answered = true
+                if (task is Objective.ExamTask) task.answered = true
+            }
+        }
+        preferences.put(BooleanNonKey.ObjectivesBgIsAvailableInNs, true)
+        preferences.put(BooleanNonKey.ObjectivesPumpStatusIsAvailableInNS, true)
+        preferences.put(IntNonKey.ObjectivesManualEnacts, 100)
+        preferences.put(BooleanNonKey.ObjectivesProfileSwitchUsed, true)
+        preferences.put(BooleanNonKey.ObjectivesDisconnectUsed, true)
+        preferences.put(BooleanNonKey.ObjectivesReconnectUsed, true)
+        preferences.put(BooleanNonKey.ObjectivesTempTargetUsed, true)
+        preferences.put(BooleanNonKey.ObjectivesLoopUsed, true)
+        preferences.put(BooleanNonKey.ObjectivesScaleUsed, true)
+    }
+
     fun allPriorAccomplished(position: Int): Boolean {
         var accomplished = true
         for (i in 0 until position) {
