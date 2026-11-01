@@ -92,6 +92,10 @@ class RawPreferenceStoreScanTest {
         // --- Runs before DI exists ---
         "implementation/src/androidMain/kotlin/app/aaps/implementation/utils/fabric/FabricPrivacyImpl.kt" to "reads before the graph is built (DI cycle)",
         "implementation/src/iosMain/kotlin/app/aaps/implementation/utils/fabric/FabricPrivacyImpl.kt" to "same, on iOS",
+        // The key it reads (`BooleanKey.EngineeringMode`) is registered, so the schema and the export
+        // still know it. Only the read goes around `Preferences`, because `Preferences.get()` calls
+        // `Config.isEngineeringMode()` itself and would never return.
+        "app/src/main/kotlin/app/aaps/implementations/ConfigImpl.kt" to "reads the engineering mode switch, which Preferences.get() depends on (DI cycle)",
 
         // --- Wiring, which hands the store to the things above ---
         "app/src/main/kotlin/app/aaps/di/metro/AppRootGraph.kt" to "DI wiring",

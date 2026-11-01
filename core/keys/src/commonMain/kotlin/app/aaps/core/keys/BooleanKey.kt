@@ -290,6 +290,9 @@ enum class BooleanKey(
         "disable_update_check", defaultValue = false, title = KeysStrings.pref_title_disable_update_check, summary = KeysStrings.pref_summary_disable_update_check,
         platforms = AppPlatform.ANDROID_ONLY
     ),
+    // Android only: only the Android Config reads this switch. It is read from the raw store there,
+    // because Preferences.get() asks Config.isEngineeringMode() itself.
+    EngineeringMode("engineering_mode", defaultValue = false, title = KeysStrings.pref_title_engineering_mode, platforms = AppPlatform.ANDROID_ONLY),
 
     ;
 

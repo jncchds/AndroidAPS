@@ -183,6 +183,7 @@ enable_fabric2|BooleanKey|true
 enable_missed_bg_readings|BooleanKey|true
 enable_pump_unreachable_alert|BooleanKey|true
 enable_unattended_export|BooleanKey|true
+engineering_mode|BooleanKey|true
 eopatch_alarms|EopatchStringNonKey|true
 eopatch_bolus_current|EopatchStringNonKey|true
 eopatch_expiration_reminders|EopatchIntKey|true
