@@ -133,7 +133,8 @@ class BuiltInSearchables(
             // Protection Timeout
             IntKey.ProtectionTimeout,
             BooleanKey.DisableUpdateCheck,
-            BooleanKey.EngineeringMode
+            BooleanKey.EngineeringMode,
+            BooleanKey.EnableAutotune
         ),
         icon = Icons.Default.Key
     )

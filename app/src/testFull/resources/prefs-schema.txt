@@ -178,6 +178,7 @@ enableSMB_ignore|BooleanKey|true
 enableSMB_with_COB|BooleanKey|true
 enableSMB_with_high_temptarget|BooleanKey|true
 enableSMB_with_temptarget|BooleanKey|true
+enable_autotune|BooleanKey|true
 enable_carbs_required_alert_local|BooleanKey|true
 enable_fabric2|BooleanKey|true
 enable_missed_bg_readings|BooleanKey|true

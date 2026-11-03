@@ -102,18 +102,26 @@ class ConfigImpl(
 
     private val enabledOptionsCache = mutableMapOf<ExternalOptions, Boolean>()
 
-    override fun isEngineeringModeOrRelease(): Boolean = if (!APS) true else isEngineeringMode() || !isDev()
+    // Options that can also be turned on by a switch in the settings, not only by a file.
+    private val optionSwitches = mapOf(
+        ExternalOptions.ENGINEERING_MODE to BooleanKey.EngineeringMode,
+        ExternalOptions.ENABLE_AUTOTUNE to BooleanKey.EnableAutotune
+    )
+
     // The switch is read from the raw store, not from Preferences: Preferences.get() itself asks
-    // isEngineeringMode(), so going through it would never end.
-    override fun isEngineeringMode(): Boolean =
-        keyValueStore().getBoolean(BooleanKey.EngineeringMode.key, BooleanKey.EngineeringMode.defaultValue) ||
-            isEnabled(ExternalOptions.ENGINEERING_MODE)
+    // isEngineeringMode(), so going through it would never end. Not cached, so a change works at once.
+    private fun isSwitchOn(option: ExternalOptions): Boolean =
+        optionSwitches[option]?.let { keyValueStore().getBoolean(it.key, it.defaultValue) } ?: false
+
+    override fun isEngineeringModeOrRelease(): Boolean = if (!APS) true else isEngineeringMode() || !isDev()
+    override fun isEngineeringMode(): Boolean = isEnabled(ExternalOptions.ENGINEERING_MODE)
     override fun isDev(): Boolean = (VERSION.contains("-") || VERSION.matches(Regex(".*[a-zA-Z]+.*"))) && !VERSION.contains("-beta") && !VERSION.contains("-rc")
     // The override is read first and never cached. The instrumented tests change which options they
     // want between tests, so a cached answer from the first one would stick for the whole run. The file
     // lookup below stays cached - that really is fixed for the life of the process.
     override fun isEnabled(option: ExternalOptions): Boolean =
         option in externalOptionsOverride.enabled() ||
+            isSwitchOn(option) ||
             enabledOptionsCache.getOrPut(option) {
                 fileListProvider().ensureExtraDirExists()?.findFile(option.filename) != null
             }

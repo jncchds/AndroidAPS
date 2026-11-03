@@ -293,6 +293,8 @@ enum class BooleanKey(
     // Android only: only the Android Config reads this switch. It is read from the raw store there,
     // because Preferences.get() asks Config.isEngineeringMode() itself.
     EngineeringMode("engineering_mode", defaultValue = false, title = KeysStrings.pref_title_engineering_mode, platforms = AppPlatform.ANDROID_ONLY),
+    // Same as the enable_autotune file. Android only: Autotune exists only on Android.
+    EnableAutotune("enable_autotune", defaultValue = false, title = KeysStrings.pref_title_enable_autotune, platforms = AppPlatform.ANDROID_ONLY),
 
     ;
 
